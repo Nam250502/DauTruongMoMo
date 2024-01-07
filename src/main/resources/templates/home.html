@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Registration</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css" />
+
+    <style>
+        .Button {
+            position: relative;
+            border: none;
+            color: #fff: padding: 8px 16px;
+            width: 9em;
+            height: 3em;
+            line-height: 2em;
+            text-align: center;
+            background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+            background-size: 300%;
+            border-radius: 30px;
+            text-transform: uppercase;
+            cursor: pointer;
+            z-index: 1;
+        }
+        
+        .Button:hover {
+            animation: animated 8s linear infinite;
+        }
+        
+        .Button::before {
+            content: "";
+            position: absolute;
+            inset: -5px;
+            z-index: -1;
+            background: linear-gradient(90deg, #03a9f4, #f441a5, #ffeb3b, #03a9f4);
+            background-size: 400%;
+            border-radius: 35px;
+            transition: 0.5s;
+        }
+        
+        .Button:hover::before {
+            filter: blur(20px);
+        }
+        
+        @keyframes animated {
+            0% {
+                background-position: 0%;
+            }
+            100% {
+                background-position: 400%;
+            }
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div th:replace="layoutuser :: sidebar"></div>
+    <div class="container p-5 d-flex justify-content-center align-items-center">
+        <!--  Header Start -->
+        <section class="">
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <div class="form-group">
+                        <a href="/user/view">
+                            <img th:src="${user.image}" id="previewImage" alt="" style="height: 170px; width: 150px;" class="rounded-circle">
+                        </a>
+
+                        <h5 class=" my-3 " th:text="${user.name} ">John Smith</h5>
+                        <ul class="list-group list-group-horizontal text-center list-group-item-light">
+                            <li class="list-group-item">
+                                <div><b>Trận thắng</b></div>
+                                <hr>
+                                <div>
+                                    <p th:text="${user.sotranthang}">10</p>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div><b>Trận thua</b></div>
+                                <hr>
+                                <div>
+                                    <p th:text="${user.sotranthua}">10</p>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div><b>Chuỗi thắng</b></div>
+                                <hr>
+                                <div>
+                                    <p th:text="${user.chuoithang}">10</p>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div><b>Chuỗi thua</b></div>
+                                <hr>
+                                <div>
+                                    <p th:text="${user.chuoithua}">10</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <form action="/game/dangki" method="get">
+                            <button class="Button" type="submit" id="btndangki">chơi</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="col-lg-4 ">
+                        <div class="card mb-4 ">
+                            <div class="card-body ">
+                                <ul class="list-group list-group-horizontal text-center list-group-item-light">
+                                    <li class="list-group-item">
+                                        <div><b>Trận thắng</b></div>
+                                        <hr>
+                                        <div>
+                                            <p th:text="${user.sotranthang}">10</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div><b>Trận thua</b></div>
+                                        <hr>
+                                        <div>
+                                            <p th:text="${user.sotranthua}">10</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div><b>Chuỗi thắng</b></div>
+                                        <hr>
+                                        <div>
+                                            <p th:text="${user.chuoithang}">10</p>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div><b>Chuỗi thua</b></div>
+                                        <hr>
+                                        <div>
+                                            <p th:text="${user.chuoithua}">10</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </div> -->
+            <!-- <div class="col-lg-4 ">
+                        <ol class="list-group list-group-numbered list-group-item-secondary">
+                            <li class="list-group-item">
+                                <a href="/game/getBXHThang" class="btn btn-outline-success m-1">Bảng xếp hạng chuỗi thắng</a>
+                            </li>
+
+                            <li class="list-group-item">
+                                <a href="/game/getBXHThua" class="btn btn-outline-danger m-1">Bảng xếp hạng chuỗi thua</a>
+                            </li>
+
+                            <li class="list-group-item"><a href="" class="btn btn-outline-link m-1">test </a></li>
+                        </ol>
+                    </div> -->
+
+
+
+        </section>
+
+    </div>
+    <div class="modal fade" id="playerInfoModal" tabindex="-1" aria-labelledby="playerInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="playerInfoModalLabel">Đang tìm đối thủ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="circle-loading" id="waiting">
+                        <h2><b id="counter">0</b></h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="/static/js/bootstrap.min.js "></script>
+    <script src="/static/js/registration.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script>
+        var username = $('#username').text();
+        var gio = document.getElementById("counter");
+
+        var socket = new SockJS('/ws'); // Kết nối đến WebSocket endpoint
+        var stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/user/queue/thongbao', function(response) {
+                const roomName = response.body;
+                window.location.href = roomName;
+                // Xử lý tên phòng ở đây, có thể chuyển hướng người dùng đến trang mới, hiển thị thông báo, v.v.
+            });
+        });
+        $("#btndangki").click(function(e) {
+            // e.preventDefault();
+            // window.location.href = '/game/dangki';
+            var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
+            playerInfoModal.show();
+            choCauHoi();
+        });
+
+
+        function choCauHoi() {
+            var giay = 60;
+
+            var dem = setInterval(function() {
+
+                gio.textContent = giay;
+                giay--;
+
+                if (giay < 0) {
+                    clearInterval(dem);
+
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

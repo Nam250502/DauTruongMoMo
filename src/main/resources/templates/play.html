@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Học Viện MOMO FAKE</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container-fluid d-flex ">
+        <div class="col-3 ">
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <img th:src="${player1.image}" class="rounded-circle" style="width: 50px;" alt="Avatar" />
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b th:text="${player1.username}" id="name1">username</b>
+                <input id="username1" type="hidden" th:value="player1.username">
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <h2 id="diem1" th:text="${player1.score}">điểm</h2>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b>điểm</b>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <h2 id="giay1">Giây</h2>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b>Giây</b>
+            </div>
+        </div>
+        <div class="col-6 ">
+            <div class="text-center m-3 p-3">
+                <b>Phòng: <b th:text="${roomname}" id="roomName"></b></b>
+                <div class="circle-loading">
+                    <h2><b id="counter">0</b></h2>
+                </div>
+                <div id="thongbaotime" style="display: none;" class="text-danger">Hết thời gian!</div>
+            </div>
+            <div class="m-2 p-2"><span><b>Câu Hỏi: </b></span><span><b class="text-primary"
+                        id="socauhientai">1</b></span><b>/5</b></div>
+            <div class="m-2 p-2">
+                <h5><b id="question">Câu hỏi</b></h5>
+            </div>
+            <div id="answerButtonsContainer"></div>
+        </div>
+        <div class="col-3 ">
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <img th:src="${player2.image}" class="rounded-circle" style="width: 50px;" alt="Avatar" />
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b th:text="${player2.username}">username</b>
+                <input type="hidden" th:value="player2.username">
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <h2 th:text="${player2.score}" id="diem2">điểm</h2>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b>điểm</b>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <h2 id="giay2">Giây</h2>
+            </div>
+            <div class="p-2 m-2 d-flex justify-content-center">
+                <b>Giây</b>
+            </div>
+        </div>
+        <div class="modal fade" id="playerInfoModal" tabindex="-1" aria-labelledby="playerInfoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="playerInfoModalLabel">Xin chúc mừng người thắng cuộc</h5>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trophy" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M8 21l8 0" />
+                            <path d="M12 17l0 4" />
+                            <path d="M7 4l10 0" />
+                            <path d="M17 4v8a5 5 0 0 1 -10 0v-8" />
+                            <path d="M5 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                            <path d="M19 9m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                          </svg>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Display Player Information here -->
+                        <p><strong>Username:</strong> <span id="playerUsername"></span></p>
+                        <p><strong>Score:</strong> <span id="playerScore"></span></p>
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/game/home" class="btn btn-success">Trở về</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var socauhientai = 1;
+        choCauHoi(5);
+        var roomname = $('#roomName').text();
+        var thongBaoTime = document.getElementById("thongbaotime");
+        var gio = document.getElementById("counter");
+
+        var socket = new SockJS('/ws'); // Kết nối đến WebSocket endpoint
+        var stompClient = Stomp.over(socket);
+        $("#btngui").click(function(e) {
+            e.preventDefault();
+            submitToServer(5);
+        });
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/room/' + roomname, function(response) {
+                const cauhoi = JSON.parse(response.body);
+                document.getElementById("question").innerText = cauhoi.cauhoi;
+                document.getElementById("socauhientai").innerText = socauhientai;
+                thongBaoTime.style.display = "none";
+                socauhientai++;
+                choCauHoi(cauhoi.time)
+                clearAnswerButtons();
+                let hasAnswered = false;
+                // Populate answer buttons
+                const answerButtonsContainer = document.getElementById("answerButtonsContainer");
+
+                cauhoi.dapan.forEach(answer => {
+                    const button = document.createElement("button");
+                    button.type = "button";
+                    button.id = "btn" + answer.id;
+                    button.className = "btn btn-secondary w-100 m-2 p-2 d-flex";
+
+
+                    // Create a paragraph element for the answer text
+                    const answerText = document.createElement("p");
+                    answerText.className = "text-center flex-grow-1";
+                    answerText.textContent = answer.name;
+                    // Append the image and answer text to the button
+                    button.appendChild(answerText);
+
+                    // Add click event to handle user's selection
+                    button.addEventListener("click", () => handleAnswerSelection(answer.id, answer.ketqua));
+
+                    // Append button to the container
+                    answerButtonsContainer.appendChild(button);
+                });
+
+
+                // Function to handle user's answer selection
+                function handleAnswerSelection(selectedAnswerId, ketqua) {
+                    if (!hasAnswered) {
+                        // Đánh dấu rằng người chơi đã chọn đáp án
+                        hasAnswered = true;
+
+                        var selectedButton = document.getElementById("btn" + selectedAnswerId);
+                        selectedButton.style.backgroundColor = "#28a745";
+                        console.log(selectedAnswerId, ketqua);
+                        var thoigian = parseInt(document.getElementById("counter").innerText);
+                        submitToServer(thoigian, selectedAnswerId, ketqua);
+                    }
+
+                }
+
+            });
+
+            // Subscribe để lắng nghe cập nhật từ server
+            stompClient.subscribe('/room/' + roomname + '/update', function(response) {
+                const gameRoom = JSON.parse(response.body);
+
+                // In ra thông tin về phòng và người chơi
+                console.log("Room Name: " + gameRoom.roomName);
+                console.log("Players:");
+                gameRoom.players.forEach(player => {
+                    console.log("  Username: " + player.username);
+                    console.log("  Name: " + player.name);
+                    console.log("  Score: " + player.score);
+                });
+                document.getElementById("diem1").textContent = gameRoom.players[0].score;
+                document.getElementById("diem2").textContent = gameRoom.players[1].score;
+
+                const btn1 = document.getElementById("btn" + gameRoom.players[0].luachon);
+                if (btn1) {
+                    console.log("btn" + gameRoom.players[0].luachon);
+                    const avatarImage1 = document.createElement("img");
+                    avatarImage1.src = gameRoom.players[0].image;
+                    avatarImage1.alt = "avatr";
+                    avatarImage1.className = "rounded-circle";
+                    avatarImage1.style.width = "50px";
+                    btn1.appendChild(avatarImage1);
+                }
+
+
+                const btn2 = document.getElementById("btn" + gameRoom.players[1].luachon);
+                if (btn2) {
+                    console.log("btn" + gameRoom.players[0].luachon);
+                    const avatarImage2 = document.createElement("img");
+                    avatarImage2.src = gameRoom.players[1].image;
+                    avatarImage2.alt = "avatr";
+                    avatarImage2.className = "rounded-circle";
+                    avatarImage2.style.width = "50px";
+                    btn2.appendChild(avatarImage2);
+                }
+
+
+            });
+
+            // Subscribe để lắng nghe cập nhật từ server
+            stompClient.subscribe('/ketqua/' + roomname, function(response) {
+
+                const player = JSON.parse(response.body);
+
+                showPlayerInfo(player.username, player.score)
+
+            });
+
+        });
+
+        function showPlayerInfo(username, score, image, isOpponent) {
+            document.getElementById('playerUsername').innerText = username;
+            document.getElementById('playerScore').innerText = score;
+            // Show the modal
+            var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
+            playerInfoModal.show();
+        }
+
+        function clearAnswerButtons() {
+            const answerButtonsContainer = document.getElementById("answerButtonsContainer");
+            while (answerButtonsContainer.firstChild) {
+                answerButtonsContainer.removeChild(answerButtonsContainer.firstChild);
+            }
+        }
+
+        function submitToServer(thoigian, luachon, ketqua) {
+            var destination = '/app/room/' + roomname;
+            var body = {
+                thoigian: thoigian,
+                luachon: luachon,
+                ketqua: ketqua
+            };
+            stompClient.send(destination, {}, JSON.stringify(body));
+        }
+
+
+        function choCauHoi(giay) {
+            var dem = setInterval(function() {
+
+                gio.textContent = giay;
+                giay--;
+
+                if (giay < 0) {
+                    clearInterval(dem);
+                    thongBaoTime.style.display = "block";
+                }
+            }, 1000);
+        }
+    </script>
+
+</body>
+
+</html>

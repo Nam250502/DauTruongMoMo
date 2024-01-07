@@ -1,0 +1,102 @@
+<!doctype html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="layout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+            <div class="container ">
+                <button type="button" class="btn btn-success" id="btnthem">Thêm câu hỏi</button>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Câu hỏi</th>
+                            <th scope="col">Đáp án</th>
+                            <th scope="col">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each=" item: ${cauHois}">
+
+                            <td th:text="${item.id}"></td>
+                            <td>
+                                <h5 th:text="${item.cauhoi}">Special title treatment</h5>
+
+                            </td>
+                            <td>
+                                <ul class="list-group" th:each="da : ${item.dapan}">
+                                    <li class="list-group-item " style="background-color: #03fc52;" th:if="${da.ketqua}" th:text="${da.name }">An item</li>
+                                    <li class="list-group-item" th:unless="${da.ketqua}" th:text="${da.name }">An item</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" th:href="@{'/admin/xoa-cau-hoi/' + ${item.id}}">Xóa</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal fade" id="playerInfoModal" tabindex="-1" aria-labelledby="playerInfoModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="playerInfoModalLabel">Thêm câu hỏi</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{/admin/them-cau-hoi}" th:object="${cauHoi}" method="post" class="">
+                                <div class="d-flex justify-content-center mb-2">
+
+                                    <input placeholder="Câu hỏi" class="form-control" type="text" id="cauhoi" th:field="*{cauhoi}" required>
+                                </div>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <input placeholder="Thời Gian" class="form-control " type="number" id="time" th:field="*{time}" required>
+                                </div>
+                                <div th:each="dapAn,iterStat : *{dapan}" class="d-flex align-items-center justify-content-center mb-2">
+                                    <input class="form-control w-50" type="text" th:field="*{dapan[__${iterStat.index}__].name}" placeholder="Đáp án" required>
+                                    <input type="checkbox" th:field="*{dapan[__${iterStat.index}__].ketqua}" id="ketqua" th:checked="*{dapan[__${iterStat.index}__].ketqua}" class="form-check-input">
+                                </div>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <button type="submit" class="btn btn-outline-success m-1">Thêm Câu Hỏi</button>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script>
+            $("#btnthem").click(function(e) {
+                e.preventDefault();
+                var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
+                playerInfoModal.show();
+            });
+        </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css" />
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <a href="./index.html" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="../assets/images/logos/dark-logo.svg" width="180" alt="">
+                                </a>
+                                <form action="/register" method="post">
+                                    <div class="mb-3">
+                                        <label for="exampleInputtext1" class="form-label">Tên</label>
+                                        <input type="text" class="form-control" id="name" name="name" aria-describedby="textHelp">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="exampleInputtext1" class="form-label">Tên Người Dùng</label>
+                                        <input type="text" class="form-control" id="username" name="username" aria-describedby="textHelp">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-8 mb-3">
+                                            <label for="exampleInputEmail1" class="form-label">Địa Chỉ Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="col-md-2 mb-3 w-25">
+                                            <label for="exampleInputEmail1" class="form-label"></label>
+                                            <button type="button" id="btnxacthuc" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-envelope-check-fill" viewBox="0 0 16 16">
+                                                <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.026A2 2 0 0 0 2 14h6.256A4.5 4.5 0 0 1 8 12.5a4.49 4.49 0 0 1 1.606-3.446l-.367-.225L8 9.586zM16 4.697v4.974A4.5 4.5 0 0 0 12.5 8a4.5 4.5 0 0 0-1.965.45l-.338-.207z"/>
+                                                <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0m-1.993-1.679a.5.5 0 0 0-.686.172l-1.17 1.95-.547-.547a.5.5 0 0 0-.708.708l.774.773a.75.75 0 0 0 1.174-.144l1.335-2.226a.5.5 0 0 0-.172-.686"/>
+                                              </svg></button>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label for="exampleInputPassword1" class="form-label">Mật Khẩu</label>
+                                        <input type="password" class="form-control" id="password" name="password">
+                                    </div>
+                                    <div class="mb-3" id="inputmaxacthuc">
+                                        <label for="exampleInputEmail1" class="form-label">Mã Xác Thực</label>
+                                        <input type="text" class="form-control" id="maxacthuc" name="maxacthuc" aria-describedby="emailHelp">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Đăng Ký</button>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <p class="fs-4 mb-0 fw-bold">Đã Có Tài Khoản?</p>
+                                        <a class="text-primary fw-bold ms-2" href="/login">Đăng Nhập</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var maxacthuc; // Định nghĩa maxacthuc ở mức global
+
+            document.getElementById("inputmaxacthuc").style.display = "none";
+
+            $("#btnxacthuc").click(function(e) {
+                e.preventDefault();
+                var encodedEmail = $("#email").val();
+
+                if (encodedEmail) {
+                    var decodedEmail = decodeURIComponent(encodedEmail);
+
+                    $.ajax({
+                        type: "get",
+                        url: "/verification",
+                        data: {
+                            gmail: decodedEmail
+                        },
+                        success: function(response) {
+                            if (response) {
+                                maxacthuc = response;
+                                console.log(maxacthuc);
+                                $("#inputmaxacthuc").css("display", "block");
+                            } else {
+                                alert("Server không trả về mã xác thực.");
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.error("Lỗi Ajax:", textStatus, errorThrown);
+                            alert("Đã xảy ra lỗi khi gửi yêu cầu đến server.");
+                        }
+                    });
+                } else {
+                    alert("Nhập gmail");
+                }
+            });
+
+
+            $("form").submit(function(e) {
+                // Kiểm tra xem giá trị của maxacthuc có bằng với giá trị trong input không
+                if ($("#maxacthuc").val() !== maxacthuc) {
+                    alert("Mã xác thực không đúng");
+                    e.preventDefault(); // Ngăn chặn form được submit nếu mã xác thực không đúng
+                }
+                // Tiếp tục submit form nếu mã xác thực đúng
+            });
+        });
+    </script>
+</body>
+
+</html>
