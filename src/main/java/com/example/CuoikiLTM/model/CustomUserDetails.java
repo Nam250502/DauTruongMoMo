@@ -38,7 +38,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return isVerified; // Giữ nguyên kiểm tra trạng thái isVerified
+        return isVerified;
     }
 
     @Override

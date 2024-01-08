@@ -7,6 +7,7 @@
     <title>Học Viện MOMO FAKE</title>
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.2/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -20,7 +21,7 @@
                 <img th:src="${player1.image}" class="rounded-circle" style="width: 50px;" alt="Avatar" />
             </div>
             <div class="p-2 m-2 d-flex justify-content-center">
-                <b th:text="${player1.username}" id="name1">username</b>
+                <b th:text="${player1.name}" id="name1">username</b>
                 <input id="username1" type="hidden" th:value="player1.username">
             </div>
             <div class="p-2 m-2 d-flex justify-content-center">
@@ -29,12 +30,7 @@
             <div class="p-2 m-2 d-flex justify-content-center">
                 <b>điểm</b>
             </div>
-            <div class="p-2 m-2 d-flex justify-content-center">
-                <h2 id="giay1">Giây</h2>
-            </div>
-            <div class="p-2 m-2 d-flex justify-content-center">
-                <b>Giây</b>
-            </div>
+
         </div>
         <div class="col-6 ">
             <div class="text-center m-3 p-3">
@@ -56,7 +52,7 @@
                 <img th:src="${player2.image}" class="rounded-circle" style="width: 50px;" alt="Avatar" />
             </div>
             <div class="p-2 m-2 d-flex justify-content-center">
-                <b th:text="${player2.username}">username</b>
+                <b th:text="${player2.name}">username</b>
                 <input type="hidden" th:value="player2.username">
             </div>
             <div class="p-2 m-2 d-flex justify-content-center">
@@ -65,12 +61,7 @@
             <div class="p-2 m-2 d-flex justify-content-center">
                 <b>điểm</b>
             </div>
-            <div class="p-2 m-2 d-flex justify-content-center">
-                <h2 id="giay2">Giây</h2>
-            </div>
-            <div class="p-2 m-2 d-flex justify-content-center">
-                <b>Giây</b>
-            </div>
+
         </div>
         <div class="modal fade" id="playerInfoModal" tabindex="-1" aria-labelledby="playerInfoModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -106,7 +97,7 @@
     <script src="/static/js/bootstrap.bundle.min.js"></script>
     <script>
         var socauhientai = 1;
-        choCauHoi(5);
+        choCauHoi(10);
         var roomname = $('#roomName').text();
         var thongBaoTime = document.getElementById("thongbaotime");
         var gio = document.getElementById("counter");
@@ -144,10 +135,8 @@
                     answerText.textContent = answer.name;
                     // Append the image and answer text to the button
                     button.appendChild(answerText);
-
                     // Add click event to handle user's selection
                     button.addEventListener("click", () => handleAnswerSelection(answer.id, answer.ketqua));
-
                     // Append button to the container
                     answerButtonsContainer.appendChild(button);
                 });
@@ -216,7 +205,7 @@
 
                 const player = JSON.parse(response.body);
 
-                showPlayerInfo(player.username, player.score)
+                showPlayerInfo(player.name, player.score)
 
             });
 

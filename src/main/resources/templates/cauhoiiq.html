@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" type="image/png" href="/images/logos/favicon.png" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+    <button type="button" class="btn btn-success" id="btnthemiq">Thêm câu hỏi IQ</button>
+    <div class="modal fade" id="cauhoiiq" tabindex="-1" aria-labelledby="playerInfoModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="playerInfoModalLabel">Thêm câu hỏi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:action="@{/admin/them-cau-hoi-iq}" th:object="${cauhoiiq}" method="post" class="">
+                        <div class="d-flex justify-content-center mb-2">
+
+                            <input placeholder="Câu hỏi" class="form-control" type="text" id="cauhoi" th:field="*{cauhoi}" required>
+                        </div>
+                        <div class="d-flex justify-content-center mb-2">
+                            <input placeholder="Link Ảnh" class="form-control" type="text" id="image" th:field="*{image}" maxlength="300" required>
+                        </div>
+                        <div class="d-flex justify-content-center mb-2">
+                            <input placeholder="iq" class="form-control " type="number" id="iq" th:field="*{iq}" required>
+                        </div>
+                        <div th:each="dapAn,iterStat : *{dapan}" class="d-flex align-items-center justify-content-center mb-2">
+                            <input class="form-control w-50" type="text" th:field="*{dapan[__${iterStat.index}__].name}" placeholder="Đáp án" required>
+                            <input type="checkbox" th:field="*{dapan[__${iterStat.index}__].ketqua}" id="ketqua" th:checked="*{dapan[__${iterStat.index}__].ketqua}" class="form-check-input">
+                        </div>
+                        <div class="d-flex justify-content-center mb-2">
+                            <button type="submit" class="btn btn-outline-success m-1">Thêm Câu Hỏi</button>
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <Script>
+        $("#btnthemiq").click(function(e) {
+            e.preventDefault();
+            var cauhoiiq = new bootstrap.Modal(document.getElementById('cauhoiiq'));
+            cauhoiiq.show();
+        });
+    </Script>
+</body>
+
+</html>

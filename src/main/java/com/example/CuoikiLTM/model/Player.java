@@ -8,12 +8,14 @@ import org.springframework.stereotype.Component;
 @Setter
 @Component
 public class Player {
+    private String name;
     private String username;
     private int score=0;
     private String image;
     private Boolean doithu=false;
     private  int luachon ;
     public Player(String name, String username,String image) {
+        this.name=name;
         this.username=  username;
         this.image=  image;
     }

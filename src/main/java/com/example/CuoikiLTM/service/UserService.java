@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -39,8 +40,12 @@ public class UserService {
         User user = userRepository.getUserByUsername(username);
         return user;
     }
+
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+    public List<User> findUserOnline(){
+        return userRepository.findUserOnline();
     }
     public List<User> getBXHChuoiThang(){
         return userRepository.getTop10UsersByWinningStreak();
@@ -69,6 +74,22 @@ public class UserService {
     }
     public void removeUser(Integer iduser) {
         userRepository.deleteById(iduser);
+    }
+    public void blockUser(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        userOptional.ifPresent(user -> {
+            user.setEnabled(0);
+            userRepository.save(user);
+        });
+    }
+    public void unlockUser(String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        userOptional.ifPresent(user -> {
+            user.setEnabled(1);
+            userRepository.save(user);
+        });
     }
 
 }

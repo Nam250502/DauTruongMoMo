@@ -123,7 +123,7 @@ public class GameService {
             if (user2.getChuoithang()>0){
                 user2.setChuoithang(0);
             }
-        }else {
+        }if (player1.getScore()<player2.getScore()){
             messageService.sendKetQuaToGroup(gameRoom.getRoomName(),player2);
             user2.setChuoithang(user2.getChuoithang()+1);
             user2.setSotranthang(user2.getSotranthang()+1);
@@ -131,7 +131,12 @@ public class GameService {
             user1.setChuoithua(user1.getChuoithua()+1);
             user1.setSotranthua(user1.getSotranthua()+1);
             user1.setChuoithang(0);
-
+        }
+        if (player1.getScore()==player2.getScore()){
+            Player player = new Player();
+            player.setName("Hòa");
+            player.setScore(player1.getScore());
+            messageService.sendKetQuaToGroup(gameRoom.getRoomName(),player);
         }
         userService.updateUser(user1);
         userService.updateUser(user2);

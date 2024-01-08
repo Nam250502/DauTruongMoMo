@@ -108,6 +108,7 @@
                         </form>
                     </div>
                 </div>
+
             </div>
 
             <!-- <div class="col-lg-4 ">
@@ -177,6 +178,9 @@
                     <div class="circle-loading" id="waiting">
                         <h2><b id="counter">0</b></h2>
                     </div>
+                    <div id="thongbao"></div>
+
+                    <div id="cauhoi"></div>
                 </div>
             </div>
         </div>
@@ -208,9 +212,81 @@
             // e.preventDefault();
             // window.location.href = '/game/dangki';
             var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
+            $.ajax({
+                type: "get",
+                url: "/game/getcauhoiiq",
+                success: function(response) {
+                    // Xử lý dữ liệu trả về ở đây
+                    if (response) {
+                        // Cập nhật nội dung của div "cauhoi" với thông tin câu hỏi
+                        $("#cauhoi").html(`
+                <div class="card mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <b>${response.cauhoi}</b>
+                        </div>
+                        <div class="card-body">
+                            <img src="${response.image}" alt="cauhoi" class="card-text w-100">
+                        </div>
+                        <div class="card-footer text-muted d-flex">
+                            ${generateAnswerButtons(response.dapan)}
+                        </div>
+                    </div>
+                </div>
+            `);
+                        addEventListeners(response);
+                    } else {
+                        // Xử lý trường hợp không có dữ liệu hoặc lỗi từ server
+                        console.log("Không có dữ liệu hoặc có lỗi từ server.");
+                    }
+                },
+                error: function(error) {
+                    // Xử lý lỗi Ajax
+                    console.log("Lỗi Ajax: ", error);
+                }
+            });
+
             playerInfoModal.show();
             choCauHoi();
         });
+
+        function generateAnswerButtons(dapAnArray) {
+            let buttonsHTML = '';
+            dapAnArray.forEach((dapAn, index) => {
+                buttonsHTML += `<button class="btn btn-danger flex-fill m-2 p-2" data-index="${index}">${dapAn.name}</button>`;
+            });
+            return buttonsHTML;
+        }
+
+
+        function addEventListeners(response) {
+            response.dapan.forEach((dapan, index) => {
+                // Sử dụng delegate để xử lý sự kiện cho các nút được tạo động
+                $(".card-footer").on("click", `button[data-index="${index}"]`, function() {
+                    // Xử lý sự kiện khi nút được click
+                    console.log(`Bạn đã chọn đáp án ${dapan.name}`);
+                    if (dapan.ketqua) {
+                        $("#thongbao").html('<b class="text-success">câu trả lời chính xác</b>');
+                        $("#cauhoi").html(``);
+                        $.ajax({
+                            type: "post",
+                            url: "/game/submitiq",
+                            data: {
+                                iq: response.iq
+                            },
+                            success: function(response1) {
+                                console.log(response1);
+                            }
+                        });
+                    } else {
+                        $("#thongbao").html('<b class="text-danger">câu trả lời đã sai</b>');
+                        $("#cauhoi").html(``);
+                    }
+
+                });
+            });
+        }
+
 
 
         function choCauHoi() {

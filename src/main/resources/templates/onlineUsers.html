@@ -1,16 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Online Users</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Modernize Free</title>
+    <link rel="shortcut icon" type="image/png" href="https://t3.ftcdn.net/jpg/03/74/73/78/360_F_374737839_VsxlmnN7soqOOOFFzy5kfE9H6PFMCkPX.jpg" />
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/styles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 </head>
 
 <body>
-    <h2>Online Users</h2>
-    <ul>
-        <li th:each="username : ${onlineUsernames}" th:text="${username}"></li>
-    </ul>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <div th:replace="layout :: sidebar"></div>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+            <!--  Header Start -->
+
+            <!--  Header End -->
+            <div class="container-fluid">
+
+                <div class="card">
+                    <div class="card-header">
+                        <span>Số lượng người chơi online là : </span> <b th:text="${soluong}"></b>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="table-responsive">
+
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Mã</th>
+                                        <th scope="col">Tên</th>
+                                        <th scope="col">SDT</th>
+                                        <th scope="col">Địa chỉ</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orderTableBody">
+                                    <tr th:each="item : ${users}">
+                                        <td th:text="${item.id}"></td>
+                                        <td th:text="${item.name}"></td>
+
+                                        <td th:text="${item.phone}"></td>
+                                        <td th:text="${item.address}"></td>
+                                        <td th:text="${item.email}"></td>
+
+                                        <td class="d-flex flex-wrap">
+                                            <b class="text-success">Online</b>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+    </div>
+
 </body>
 
 </html>

@@ -2,6 +2,7 @@ package com.example.CuoikiLTM.controller;
 
 import com.example.CuoikiLTM.model.*;
 import com.example.CuoikiLTM.repository.UserRepository;
+import com.example.CuoikiLTM.service.CauHoiIQService;
 import com.example.CuoikiLTM.service.CauHoiService;
 import com.example.CuoikiLTM.service.GameService;
 import com.example.CuoikiLTM.service.UserService;
@@ -28,6 +29,8 @@ public class GameController {
     private UserService userService;
     @Autowired
     private  SimpMessageSendingOperations messagingTemplate;
+    @Autowired
+    private CauHoiIQService cauHoiIQService;
     @GetMapping("/home")
     public String home(Principal principal, Model model) {
         User user = userService.getUserByUserName(principal.getName());
@@ -84,5 +87,18 @@ public class GameController {
         List<User> users = userService.getBXHSoTranThang();
         model.addAttribute("users",users);
         return "bxh-so-tran-thang";
+    }
+    @ResponseBody
+    @GetMapping("/getcauhoiiq")
+    public CauHoiIQ getCauHoiIq(){
+        return cauHoiIQService.layCauHoiNgauNhien();
+    }
+    @ResponseBody
+    @PostMapping("/submitiq")
+    public String submitIq(Principal principal,@RequestParam("iq") int iq){
+        User user = userService.getUserByUserName(principal.getName());
+        user.setIq(iq);
+        userService.updateUser(user);
+        return "thêm id thành công";
     }
 }

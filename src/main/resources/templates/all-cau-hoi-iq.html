@@ -29,7 +29,9 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Câu hỏi</th>
+                            <th scope="col">Ảnh</th>
                             <th scope="col">Đáp án</th>
+                            <th scope="col">IQ</th>
                             <th scope="col">Hành động</th>
                         </tr>
                     </thead>
@@ -42,13 +44,17 @@
 
                             </td>
                             <td>
+                                <img th:src="${item.image}" alt="" height="100px">
+                            </td>
+                            <td>
                                 <ul class="list-group" th:each="da : ${item.dapan}">
                                     <li class="list-group-item " style="background-color: #03fc52;" th:if="${da.ketqua}" th:text="${da.name }">An item</li>
                                     <li class="list-group-item" th:unless="${da.ketqua}" th:text="${da.name }">An item</li>
                                 </ul>
                             </td>
+                            <td th:text="${item.iq}"></td>
                             <td>
-                                <a class="btn btn-danger" th:href="@{'/admin/xoa-cau-hoi/' + ${item.id}}">Xóa</a>
+                                <a class="btn btn-danger" th:href="@{'/admin/xoa-cau-hoi-iq/' + ${item.id}}">Xóa</a>
                             </td>
                         </tr>
                     </tbody>
@@ -62,13 +68,16 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <form th:action="@{/admin/them-cau-hoi}" th:object="${cauHoi}" method="post" class="">
+                            <form th:action="@{/admin/them-cau-hoi-iq}" th:object="${cauhoiiq}" method="post" class="">
                                 <div class="d-flex justify-content-center mb-2">
 
                                     <input placeholder="Câu hỏi" class="form-control" type="text" id="cauhoi" th:field="*{cauhoi}" required>
                                 </div>
                                 <div class="d-flex justify-content-center mb-2">
-                                    <input placeholder="Thời Gian" class="form-control " type="number" id="time" th:field="*{time}" required>
+                                    <input placeholder="Link Ảnh" class="form-control" type="text" id="image" th:field="*{image}" maxlength="300" required>
+                                </div>
+                                <div class="d-flex justify-content-center mb-2">
+                                    <input placeholder="iq" class="form-control " type="number" id="iq" th:field="*{iq}" required>
                                 </div>
                                 <div th:each="dapAn,iterStat : *{dapan}" class="d-flex align-items-center justify-content-center mb-2">
                                     <input class="form-control w-50" type="text" th:field="*{dapan[__${iterStat.index}__].name}" placeholder="Đáp án" required>
@@ -78,27 +87,27 @@
                                     <button type="submit" class="btn btn-outline-success m-1">Thêm Câu Hỏi</button>
                                 </div>
 
+
                             </form>
 
                         </div>
 
                     </div>
                 </div>
+
+
+
             </div>
 
-
-
-        </div>
-
-        <script src="/static/js/bootstrap.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script>
-            $("#btnthem").click(function(e) {
-                e.preventDefault();
-                var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
-                playerInfoModal.show();
-            });
-        </script>
+            <script src="/static/js/bootstrap.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script>
+                $("#btnthem").click(function(e) {
+                    e.preventDefault();
+                    var playerInfoModal = new bootstrap.Modal(document.getElementById('playerInfoModal'));
+                    playerInfoModal.show();
+                });
+            </script>
 </body>
 
 </html>

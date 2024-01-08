@@ -26,11 +26,15 @@ public class User {
     private int sotranthua;
     private int chuoithang;
     private int chuoithua;
+    private int enabled ;
+    private int iq ;
     public User(){
+
         this.sotranthua=0;
         this.sotranthang=0;
         this.chuoithang=0;
         this.chuoithua=0;
+        this.enabled=1;
     }
 
     @ManyToMany(fetch = FetchType.EAGER)

@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Boolean existsByEmail(String email);
 
     Optional<User> findByUsernameOrEmail(String username, String email);
-
+    Optional<User> findByUsernameAndEnabled(String username, int enabled);
 
     boolean existsByUsername(String username);
 
@@ -37,4 +37,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> getTop10UsersSoTranThua();
     @Query(value = "SELECT * FROM user ORDER BY user.sotranthang DESC LIMIT 10", nativeQuery = true)
     List<User> getTop10UsersBySoTranThang();
+//    @Query(value ="SELECT * FROM spring_session a, user b WHERE a.PRINCIPAL_NAME = b.username", nativeQuery = true)
+//    List<Object[]> findUserOnline();
+@Query(value = "SELECT b.* FROM spring_session a, user b WHERE a.PRINCIPAL_NAME = b.username", nativeQuery = true)
+List<User> findUserOnline();
+
+
+
+
 }
